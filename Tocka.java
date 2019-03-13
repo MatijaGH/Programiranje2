@@ -4,17 +4,21 @@ public class Tocka {
 
 	String ime;
 	Set<Tocka> sosedi;
+	double x,y;
 		
 	public Tocka(String ime) {
 		this.ime = ime; //isto kot self v pythonu
-		sosedi = new HashSet<Tocka>(); //implementacija mnoûice s pomoËjo zgoöËenih tabel
-		//v Javi velja, da this spuöËamo, Ëe ga ne rabimo
+		sosedi = new HashSet<Tocka>();
+		x = y = 0;
+		
+		//implementacija mno≈æice s pomo√®jo zgo≈°√®enih tabel
+		//v Javi velja, da this spu≈°√®amo, √®e ga ne rabimo
 	}
 	
 	public int stopnja() {
 		return sosedi.size();
 	}
-	//kliËemo s t.stopnja()
+	//kli√®emo s t.stopnja()
 		
 	public String toString() {
 		return ime;
