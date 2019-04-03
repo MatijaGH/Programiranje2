@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.*;
+import java.io.*;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Graf {
@@ -51,7 +55,7 @@ public class Graf {
 	
 	public void odstraniTocko(Tocka v) {
 		for (Tocka u : v.sosedi) u.sosedi.remove(v);
-		tocke.remove(v);
+		tocke.remove(v.ime);
 	}
 	
 	//v primeru, ko imajo metode iste parametre
@@ -117,6 +121,66 @@ public class Graf {
 			v.x = x + r * Math.cos(kot);
 			v.y = y + r * Math.sin(kot);
 			++i;
+		}
+	}
+	
+	public void shrani(String ime) { //shrani graf, ki ga že imamo(odvisna je od njega)
+		try {
+			PrintWriter dat = new PrintWriter(new FileWriter(ime));
+			for (Tocka v : tocke.values()) {
+				dat.println(v + ":" + v.x + " " + v.y);
+			}
+			dat.print("***");
+			
+			for (Tocka v : tocke.values()) {
+				dat.print(v + ":");
+				for (Tocka u : v.sosedi) {
+					dat.print(" " + u);
+				}
+				dat.println();
+			}
+			dat.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static Graf preberi(String ime) { //neodvisna od grafa, ki ga imamo, klièemo jo lahko na objektu, ne nujno na razredu
+		try {
+			Graf graf = new Graf();
+			BufferedReader dat = new BufferedReader(new FileReader(ime));
+			
+			int blok = 1;
+			while (dat.ready()) {
+				String vrstica = dat.readLine().trim();
+				if (vrstica.equals("")) continue;
+				if (vrstica.equals("***")) blok = 2;
+				else if (blok == 1) {
+					String[] podatki = vrstica.split("[ :]+"); //vsi znaki v [] pridejo v poštev, + pomeni, da dopušèamo veè zaporednih takih znakov
+					Tocka v = graf.dodajTocko(podatki[0]);
+					v.x = Double.parseDouble(podatki[1]);
+					v.y = Double.parseDouble(podatki[2]);
+				}
+				else if (blok == 2) {
+					String [] podatki = vrstica.split("[ :]+");
+					Tocka v = graf.tocka(podatki[0]);
+					if (v == null) v = graf.dodajTocko(podatki[0]);
+					for (int i = 1; i < podatki.length; ++i) {
+						Tocka u = graf.tocka(podatki[i]);
+						if (u == null) u = graf.dodajTocko(podatki[i]);
+						graf.dodajPovezavo(v, u);
+					}
+				}
+			}
+			
+			dat.close();
+			return graf;
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			
+			return null;
 		}
 	}
 }

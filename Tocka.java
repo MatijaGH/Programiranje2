@@ -5,7 +5,8 @@ public class Tocka {
 	String ime;
 	Set<Tocka> sosedi;
 	double x,y;
-		
+	
+
 	public Tocka(String ime) {
 		this.ime = ime; //isto kot self v pythonu
 		sosedi = new HashSet<Tocka>();
